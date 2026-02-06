@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>💌 One Important Question</title>
+
+  <!-- Social preview -->
+  <meta property="og:title" content="Mama❤️, I have something to ask you 💖">
+  <meta property="og:description" content="Tap to continue…">
+  <meta property="og:type" content="website">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #ff758c, #ff7eb3);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      color: #333;
+    }
+
+    .screen {
+      text-align: center;
+      background: white;
+      padding: 40px 25px;
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      max-width: 340px;
+      width: 90%;
+      animation: fadeIn 0.7s ease-out;
+    }
+
+    h2 {
+      margin: 0 0 24px;
+      font-size: 1.6em;
+      line-height: 1.3;
+    }
+
+    p {
+      margin: 0 0 28px;
+      color: #666;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      position: relative;
+    }
+
+    button {
+      padding: 14px 32px;
+      font-size: 1.1em;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.15s;
+      user-select: none;
+      touch-action: manipulation;
+    }
+
+    button:active {
+      transform: scale(0.96);
+    }
+
+    .yes {
+      background: #ff4d6d;
+      color: white;
+      font-weight: bold;
+    }
+
+    .yes.pulse {
+      animation: heartbeat 1.2s infinite;
+    }
+
+    .no {
+      background: #aaa;
+      color: white;
+      position: absolute;
+      transition: all 0.3s ease;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .firework {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      animation: explode 1.3s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes explode {
+      0%   { transform: scale(0.5); opacity: 1; }
+      70%  { transform: scale(12); }
+      100% { transform: scale(20); opacity: 0; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.92); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.08); }
+    }
+
+    @media (max-width: 400px) {
+      .screen { padding: 30px 20px; }
+      h2 { font-size: 1.45em; }
+      button { padding: 12px 28px; font-size: 1em; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loading screen -->
+  <div id="loading" class="screen">
+    <h2>Loading…</h2>
+    <p>Preparing something special 💗</p>
+  </div>
+
+  <!-- Countdown -->
+  <div id="countdown" class="screen hidden">
+    <h2 id="countText">3</h2>
+    <p>Get ready…</p>
+  </div>
+
+  <!-- Main question -->
+  <div id="main" class="screen hidden">
+    <h2>Mama❤️, will you be my girlfriend? 💘</h2>
+    <div class="buttons">
+      <button class="yes" onclick="yes()">Yes 💖</button>
+      <button class="no" id="noBtn">No 💔</button>
+    </div>
+  </div>
+
+  <script>
+    const noBtn = document.getElementById("noBtn");
+    const whatsappNumber = "2349012690112"; // Change if needed
+
+    // Screen flow
+    setTimeout(() => {
+      document.getElementById("loading").classList.add("hidden");
+      document.getElementById("countdown").classList.remove("hidden");
+      startCountdown();
+    }, 1800);
+
+    function startCountdown() {
+      let count = 3;
+      const text = document.getElementById("countText");
+
+      const timer = setInterval(() => {
+        count--;
+        text.innerText = count;
+        if (count <= 0) {
+          clearInterval(timer);
+          document.getElementById("countdown").classList.add("hidden");
+          document.getElementById("main").classList.remove("hidden");
+        }
+      }, 900);
+    }
+
+    // Move "No" button when approached
+    function moveNo() {
+      const btn = noBtn;
+      const padding = 60;
+      const maxX = window.innerWidth - btn.offsetWidth - padding * 2;
+      const maxY = window.innerHeight - btn.offsetHeight - padding * 2;
+
+      if (maxX < 0 || maxY < 0) return; // safety for tiny screens
+
+      const x = padding + Math.random() * maxX;
+      const y = padding + Math.random() * maxY;
+
+      btn.style.left = `${x}px`;
+      btn.style.top  = `${y}px`;
+    }
+
+    noBtn.addEventListener("mouseover", moveNo);
+    noBtn.addEventListener("touchstart", moveNo);
+    noBtn.addEventListener("click", moveNo); // extra protection on mobile
+
+    // Yes → celebration + WhatsApp
+    function yes() {
+      launchFireworks();
+      document.querySelector(".yes").classList.add("pulse");
+
+      setTimeout(() => {
+        const message = encodeURIComponent("Mama❤️ said YES 💖🥰");
+        const waUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
+
+        // Attempt to open WhatsApp
+        window.location.href = waUrl;
+
+        // Fallback in case WhatsApp doesn't open (desktop, no app, etc.)
+        setTimeout(() => {
+          alert("Yayyy! Mama said YES!! 💖\nNow go tell her how much she means to you 😊");
+        }, 1800);
+      }, 800);
+    }
+
+    function launchFireworks() {
+      for (let i = 0; i < 30; i++) {
+        const fw = document.createElement("div");
+        fw.className = "firework";
+        fw.style.background = `hsl(${Math.random() * 360}, 100%, 60%)`;
+        fw.style.left = Math.random() * window.innerWidth + "px";
+        fw.style.top  = Math.random() * window.innerHeight + "px";
+        document.body.appendChild(fw);
+        setTimeout(() => fw.remove(), 1500);
+      }
+    }
+  </script>
+
+</body>
+</html>
